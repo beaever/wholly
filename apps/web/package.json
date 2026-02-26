@@ -10,6 +10,8 @@
     "clean": "rm -rf .next .turbo node_modules"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@supabase/supabase-js": "^2.97.0",
     "@wholly/bridge": "workspace:*",
     "@wholly/core": "workspace:*",
     "@wholly/types": "workspace:*",

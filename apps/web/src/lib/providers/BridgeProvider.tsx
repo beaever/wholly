@@ -19,7 +19,10 @@ export function BridgeProvider({ children }: BridgeProviderProps) {
     const unsubscribe = subscribeToNative((message) => {
       switch (message.type) {
         case 'PUSH_GRANTED':
-          console.log('[Bridge] Push granted with token:', message.payload.token);
+          console.log(
+            '[Bridge] Push granted with token:',
+            message.payload.token,
+          );
           break;
         case 'PUSH_DENIED':
           console.log('[Bridge] Push permission denied');
@@ -29,7 +32,7 @@ export function BridgeProvider({ children }: BridgeProviderProps) {
           break;
         case 'APP_STATE_CHANGE':
           if (message.payload.state === 'active') {
-            loadFromStorage();
+            return loadFromStorage();
           }
           break;
       }
