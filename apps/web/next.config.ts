@@ -8,6 +8,14 @@ const nextConfig: NextConfig = {
     '@wholly/types',
     '@wholly/ui-web',
   ],
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+    ],
+  },
 };
 
 export default nextConfig;
