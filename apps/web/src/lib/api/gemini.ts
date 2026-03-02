@@ -62,10 +62,12 @@ const ESSENTIAL_ITEMS: PackingItem[] = [
 ];
 
 export async function generatePackingList(
-  input: PackingInput
+  input: PackingInput,
 ): Promise<PackingItem[]> {
   try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-2.0-flash-exp',
+    });
 
     const prompt = `당신은 워킹홀리데이 준비 전문가입니다. 다음 정보를 바탕으로 짐싸기 리스트를 추천해주세요.
 
@@ -97,15 +99,17 @@ JSON 배열만 반환하고 다른 설명은 포함하지 마세요.`;
     }
 
     const aiItems = JSON.parse(jsonMatch[0]);
-    
-    const generatedItems: PackingItem[] = aiItems.map((item: any, index: number) => ({
-      id: `ai-${index + 1}`,
-      category: item.category,
-      name: item.name,
-      reason: item.reason,
-      isRequired: false,
-      isAIGenerated: true,
-    }));
+
+    const generatedItems: PackingItem[] = aiItems.map(
+      (item: any, index: number) => ({
+        id: `ai-${index + 1}`,
+        category: item.category,
+        name: item.name,
+        reason: item.reason,
+        isRequired: false,
+        isAIGenerated: true,
+      }),
+    );
 
     return [...ESSENTIAL_ITEMS, ...generatedItems];
   } catch (error) {

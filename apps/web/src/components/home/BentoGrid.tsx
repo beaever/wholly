@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useExchangeRate } from '@/lib/hooks/useExchangeRate';
+import { ExchangeRateSkeleton } from '@/components/common/skeleton';
 
 interface BentoCardProps {
   icon: string;
@@ -56,14 +57,16 @@ export function BentoGrid() {
 
   return (
     <section className='grid grid-cols-2 gap-3 px-6'>
-      <BentoCard
-        icon='💰'
-        title='환율 계산'
-        subtitle={
-          loading ? '로딩 중...' : `1 AUD = ${formattedRate || '880'} KRW`
-        }
-        // href='/tools/exchange'
-      />
+      {loading ? (
+        <ExchangeRateSkeleton />
+      ) : (
+        <BentoCard
+          icon='💰'
+          title='환율 계산'
+          subtitle={`1 AUD = ${formattedRate || '880'} KRW`}
+          // href='/tools/exchange'
+        />
+      )}
       <BentoCard
         icon='🎒'
         title='짐싸기 체크'
