@@ -1,8 +1,19 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-echo "🔍 Running typecheck before push..."
+echo "🔍 Running pre-push checks..."
+echo ""
 
-pnpm typecheck
+echo "📝 1/3 Running lint..."
+pnpm lint --filter=@wholly/web || exit 1
 
-echo "✅ Typecheck passed! Pushing..."
+echo ""
+echo "🔎 2/3 Running typecheck..."
+pnpm typecheck || exit 1
+
+echo ""
+echo "🏗️  3/3 Running build..."
+pnpm build --filter=@wholly/web || exit 1
+
+echo ""
+echo "✅ All checks passed! Pushing..."
