@@ -18,6 +18,10 @@ export interface PackingItem {
   isAIGenerated: boolean;
 }
 
+export interface PackingListResponse {
+  items: PackingItem[];
+}
+
 const ESSENTIAL_ITEMS: PackingItem[] = [
   {
     id: 'essential-1',
@@ -47,15 +51,17 @@ const ESSENTIAL_ITEMS: PackingItem[] = [
     id: 'essential-4',
     name: '여행자 보험',
     category: '서류',
+    reason: '워홀 전용 보험',
     isRequired: true,
-    description: '워홀 전용 보험',
+    isAIGenerated: false,
   },
   {
     id: 'essential-5',
     name: '잔고 증명서',
     category: '서류',
+    reason: 'AUD $5,000 이상',
     isRequired: true,
-    description: 'AUD $5,000 이상',
+    isAIGenerated: false,
   },
 ];
 

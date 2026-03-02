@@ -20,7 +20,12 @@ export default function PackingPage() {
   }) => {
     setLoading(true);
     try {
-      const generatedItems = await generatePackingList(data);
+      const generatedItems = await generatePackingList({
+        destination: data.destination,
+        season: data.departureMonth,
+        purpose: data.purpose,
+        duration: '1년',
+      });
       setItems(generatedItems);
       setStep('list');
     } catch (error) {
