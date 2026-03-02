@@ -6,11 +6,27 @@
       "persistent": true
     },
     "build": {
-      "dependsOn": ["^build"],
-      "outputs": [".next/**", "dist/**"]
+      "dependsOn": ["^build", "typecheck"],
+      "outputs": [".next/**", "dist/**"],
+      "inputs": [
+        "src/**",
+        "public/**",
+        "package.json",
+        "tsconfig.json",
+        "next.config.*"
+      ]
     },
     "lint": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"],
+      "outputs": [],
+      "outputLogs": "new-only"
+    },
+    "typecheck": {
+      "dependsOn": ["^typecheck"],
+      "inputs": ["src/**", "**/*.ts", "**/*.tsx", "tsconfig.json"],
+      "outputs": [],
+      "outputLogs": "errors-only"
     },
     "clean": {
       "cache": false
