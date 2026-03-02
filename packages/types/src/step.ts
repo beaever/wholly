@@ -7,8 +7,10 @@ export interface Step {
   title: string;
   description: string;
   order: number;
-  checklist: ChecklistItem[];
-  status: StepStatus;
+  icon?: string;
+  estimatedDays?: number;
+  checklist?: ChecklistItem[];
+  status?: StepStatus;
 }
 
 export interface StepProgress {

@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
-import { getStepById, getChecklistByStepId } from '@wholly/core';
+import { getStepById } from '@/lib/api/supabase/steps';
+import { getChecklistByStepId } from '@/lib/api/supabase/checklist';
 import { StepDetail } from '@/components/StepDetail';
 
 interface StepPageProps {
@@ -8,24 +9,17 @@ interface StepPageProps {
 
 export default async function StepPage({ params }: StepPageProps) {
   const { id } = await params;
-  const step = getStepById(id);
+  const step = await getStepById(id);
 
   if (!step) {
     notFound();
   }
 
-  const checklist = getChecklistByStepId(id);
+  const checklist = await getChecklistByStepId(id);
 
   return (
-    <main className="mx-auto max-w-lg px-4 py-6">
+    <main className='mx-auto max-w-lg px-4 py-6'>
       <StepDetail step={step} checklist={checklist} />
     </main>
   );
-}
-
-export async function generateStaticParams() {
-  const { WORKING_HOLIDAY_STEPS } = await import('@wholly/core');
-  return WORKING_HOLIDAY_STEPS.map((step) => ({
-    id: step.id,
-  }));
 }
