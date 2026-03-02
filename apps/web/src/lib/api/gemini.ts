@@ -45,75 +45,44 @@ const ESSENTIAL_ITEMS: PackingItem[] = [
   },
   {
     id: 'essential-4',
-    category: '전자기기',
-    name: '휴대폰 충전기',
-    reason: '필수 전자기기',
+    name: '여행자 보험',
+    category: '서류',
     isRequired: true,
-    isAIGenerated: false,
+    description: '워홀 전용 보험',
   },
   {
     id: 'essential-5',
-    category: '의류',
-    name: '속옷/양말 (1주일분)',
-    reason: '기본 의류',
+    name: '잔고 증명서',
+    category: '서류',
     isRequired: true,
-    isAIGenerated: false,
+    description: 'AUD $5,000 이상',
   },
 ];
 
-export async function generatePackingList(
-  input: PackingInput,
-): Promise<PackingItem[]> {
+export async function generatePackingList(data: {
+  destination: string;
+  season: string;
+  purpose: string;
+  duration: string;
+}): Promise<PackingItem[]> {
   try {
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-2.0-flash-exp',
+    const response = await fetch('/api/gemini', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
     });
 
-    const prompt = `당신은 워킹홀리데이 준비 전문가입니다. 다음 정보를 바탕으로 짐싸기 리스트를 추천해주세요.
-
-목적지: ${input.destination}
-출발 시기: ${input.departureMonth}
-주요 목적: ${input.purpose}
-
-다음 형식으로 10개의 추천 아이템을 JSON 배열로 반환해주세요:
-[
-  {
-    "category": "카테고리명",
-    "name": "아이템명",
-    "reason": "추천 이유 (한 문장)"
-  }
-]
-
-카테고리는 다음 중 하나를 사용하세요: 의류, 전자기기, 생활용품, 의약품, 기타
-
-현지 날씨, 계절, 목적을 고려하여 실용적인 아이템을 추천해주세요.
-JSON 배열만 반환하고 다른 설명은 포함하지 마세요.`;
-
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
-
-    const jsonMatch = text.match(/\[[\s\S]*\]/);
-    if (!jsonMatch) {
-      throw new Error('Invalid response format');
+    if (!response.ok) {
+      throw new Error('API 요청 실패');
     }
 
-    const aiItems = JSON.parse(jsonMatch[0]);
+    const parsed: PackingListResponse = await response.json();
 
-    const generatedItems: PackingItem[] = aiItems.map(
-      (item: any, index: number) => ({
-        id: `ai-${index + 1}`,
-        category: item.category,
-        name: item.name,
-        reason: item.reason,
-        isRequired: false,
-        isAIGenerated: true,
-      }),
-    );
-
-    return [...ESSENTIAL_ITEMS, ...generatedItems];
+    return [...ESSENTIAL_ITEMS, ...parsed.items];
   } catch (error) {
     console.error('Error generating packing list:', error);
-    return ESSENTIAL_ITEMS;
+    throw new Error('짐싸기 리스트 생성에 실패했습니다.');
   }
 }
