@@ -53,12 +53,19 @@ function BentoCard({
  * @returns {JSX.Element}
  */
 export function BentoGrid() {
-  const { formattedRate, loading } = useExchangeRate('AUD', 'KRW');
+  const { formattedRate, loading, error } = useExchangeRate('AUD', 'KRW');
 
   return (
     <section className='grid grid-cols-2 gap-3 px-6'>
       {loading ? (
         <ExchangeRateSkeleton />
+      ) : error ? (
+        <BentoCard
+          icon='💰'
+          title='환율 계산'
+          subtitle='환율 정보를 불러올 수 없습니다'
+          // href='/tools/exchange'
+        />
       ) : (
         <BentoCard
           icon='💰'
