@@ -55,6 +55,7 @@
 
 1. **앱 설정** → **앱 키**
 2. **REST API 키** 복사 (이것이 Client ID입니다)
+   - 예시: `8094aaccbf5d0f8dc10d17f2cb44ed5b`
 
 ### 7. Client Secret 생성 (선택사항)
 
@@ -90,6 +91,7 @@ COMMENT ON COLUMN users.avatar_url IS 'User profile picture URL from OAuth provi
 ```
 
 또는 마이그레이션 파일 실행:
+
 ```bash
 # 로컬에서 Supabase CLI 사용 시
 supabase db push
@@ -100,6 +102,7 @@ supabase db push
 ## ✅ 테스트
 
 1. 로컬 개발 서버 실행:
+
    ```bash
    pnpm dev
    ```
@@ -118,19 +121,32 @@ supabase db push
 
 ## 🐛 트러블슈팅
 
+### KOE101 에러 (Invalid client_id)
+
+- **원인**: Supabase에 입력한 Kakao Client ID가 잘못되었거나 누락됨
+- **해결**:
+  1. Kakao Developers → **앱 설정** → **앱 키**에서 **REST API 키** 확인
+  2. Supabase Dashboard → **Authentication** → **Providers** → **Kakao**
+  3. **Kakao Client ID**에 REST API 키를 정확히 입력 (공백 없이)
+  4. **Save** 클릭 후 재시도
+
 ### "Unsupported provider" 에러
+
 - Supabase에서 Kakao Provider가 활성화되어 있는지 확인
 - Kakao Client ID/Secret이 올바르게 입력되었는지 확인
 
 ### Redirect URI 에러
+
 - Kakao Developers에 등록한 Redirect URI가 Supabase URL과 정확히 일치하는지 확인
 - `https://` 프로토콜 확인
 
 ### 프로필 정보가 안 보임
+
 - Kakao Developers에서 동의 항목이 올바르게 설정되었는지 확인
 - users 테이블에 name, avatar_url 컬럼이 추가되었는지 확인
 
 ### 로컬에서 테스트 안됨
+
 - Kakao Developers 플랫폼에 `http://localhost:3000`이 등록되어 있는지 확인
 - 브라우저 쿠키/캐시 삭제 후 재시도
 
